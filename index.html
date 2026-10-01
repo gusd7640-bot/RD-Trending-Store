@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Akash3.0 | Trending Fashion Store</title>
+<meta name="description" content="Akash3.0 - Trending fashion and best deals.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;color:#222}
+.app{width:100%;max-width:520px;margin:auto;background:#fff;min-height:100vh}
+.topbar{padding:16px 16px 12px;text-align:center;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:10}
+.avatar{width:72px;height:72px;border-radius:50%;margin:auto;background:linear-gradient(135deg,#111,#777);display:flex;align-items:center;justify-content:center;color:#fff;font-size:25px;font-weight:800}
+.name{font-size:22px;font-weight:800;margin-top:8px}
+.bio{font-size:13px;color:#777;margin:5px 0 12px}
+.follow{border:1px solid #222;background:#fff;border-radius:22px;padding:8px 27px;font-weight:700;cursor:pointer}
+.categories{display:flex;gap:8px;overflow-x:auto;padding:12px 12px 8px;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.cat{border:1px solid #ddd;background:#fff;border-radius:20px;padding:8px 14px;white-space:nowrap;font-size:13px;cursor:pointer}
+.cat.active{background:#222;color:#fff;border-color:#222}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e8e8e8}
+.card{background:#fff;padding-bottom:12px;overflow:hidden}
+.product-img{width:100%;aspect-ratio:1/1.08;object-fit:cover;background:#eee;display:block}
+.info{padding:9px 10px 0}
+.brand{font-size:11px;font-weight:800;letter-spacing:.5px;margin-bottom:5px}
+.title{font-size:14px;line-height:1.25;height:36px;overflow:hidden}
+.price-row{margin-top:7px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.old{text-decoration:line-through;color:#888;font-size:12px}
+.price{font-size:17px;font-weight:800}
+.off{font-size:10px;color:#fff;background:#34c979;padding:4px 6px;font-weight:700}
+.actions{display:flex;gap:7px;padding:10px 10px 0}
+.shop{flex:1;border:0;background:#e86e4e;color:#fff;border-radius:9px;padding:11px 5px;font-weight:800;cursor:pointer}
+.wa{width:44px;border:1px solid #28b86d;background:#fff;color:#18a85d;border-radius:9px;font-size:18px;cursor:pointer}
+.empty{text-align:center;padding:40px 20px;color:#777;display:none;grid-column:1/-1}
+.footer{text-align:center;padding:24px 10px;color:#999;font-size:12px}
+@media(min-width:521px){body{padding:20px 0}.app{box-shadow:0 0 25px #ddd;border-radius:18px;overflow:hidden}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="avatar">A3</div>
+    <div class="name">Akash3.0</div>
+    <div class="bio">🔥 Trending Fashion • Best Deals • Shop Smart 🛍️</div>
+    <button class="follow" onclick="followMe()">Follow</button>
+  </header>
+
+  <nav class="categories">
+    <button class="cat active" data-cat="All">All</button>
+    <button class="cat" data-cat="Men">Men's</button>
+    <button class="cat" data-cat="Women">Women's</button>
+    <button class="cat" data-cat="T-Shirts">T-Shirts</button>
+    <button class="cat" data-cat="Kurtis">Kurtis</button>
+  </nav>
+
+  <main class="grid" id="grid"></main>
+  <div class="footer">© 2026 Akash3.0 • Affiliate Store</div>
+</div>
+
+<script>
+/*
+  EDIT YOUR PRODUCTS HERE.
+  Replace each image URL and shopUrl with your own product/affiliate link.
+*/
+const products = [
+  {cat:"Women", brand:"MEESHO", title:"Stylish Black Flared Skirt", price:226, old:1299, off:"83% OFF",
+   image:"https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"Women", brand:"MEESHO", title:"Women Trendy Black Skirt", price:457, old:1499, off:"70% OFF",
+   image:"https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"Women", brand:"MEESHO", title:"Oxidised Silver Fashion Necklace", price:215, old:399, off:"46% OFF",
+   image:"https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"Women", brand:"MEESHO", title:"Women Black Embroidery Kurti", price:463, old:999, off:"54% OFF",
+   image:"https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"Men", brand:"MYNTRA", title:"Men's Premium Casual T-Shirt", price:499, old:999, off:"50% OFF",
+   image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"Men", brand:"MYNTRA", title:"Men's Stylish Oversized T-Shirt", price:599, old:1199, off:"50% OFF",
+   image:"https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"T-Shirts", brand:"TRENDING", title:"Premium Cotton T-Shirt", price:399, old:799, off:"50% OFF",
+   image:"https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"},
+  {cat:"Kurtis", brand:"MEESHO", title:"Women's Printed Kurti Set", price:549, old:1099, off:"50% OFF",
+   image:"https://images.unsplash.com/photo-1597983073493-88cd35cf93b0?auto=format&fit=crop&w=700&q=85",
+   shopUrl:"#"}
+];
+
+const grid = document.getElementById("grid");
+
+function money(n){ return "₹" + n.toLocaleString("en-IN"); }
+
+function render(category="All"){
+  grid.innerHTML="";
+  const list=products.filter(p=>category==="All" || p.cat===category || (category==="T-Shirts" && p.cat==="Men"));
+  if(!list.length){
+    grid.innerHTML='<div class="empty" style="display:block">No products found.</div>';
+    return;
+  }
+  list.forEach(p=>{
+    const card=document.createElement("article");
+    card.className="card";
+    card.innerHTML=`
+      <img class="product-img" src="${p.image}" alt="${p.title}" loading="lazy">
+      <div class="info">
+        <div class="brand">${p.brand}</div>
+        <div class="title">${p.title}</div>
+        <div class="price-row">
+          <span class="old">${money(p.old)}</span>
+          <span class="price">${money(p.price)}</span>
+          <span class="off">${p.off}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="shop" onclick="openShop('${p.shopUrl}')">Shop Now</button>
+        <button class="wa" aria-label="WhatsApp" onclick="whatsapp('${p.title}')">◉</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function openShop(url){
+  if(url && url!=="#") window.open(url,"_blank");
+  else alert("এখানে আপনার Meesho/Myntra affiliate link বসান।");
+}
+function whatsapp(title){
+  const phone="919999999999"; // CHANGE THIS TO YOUR WHATSAPP NUMBER
+  const msg=encodeURIComponent("Hi, I want the product details for: "+title);
+  window.open("https://wa.me/"+phone+"?text="+msg,"_blank");
+}
+function followMe(){
+  alert("এখানে আপনার Instagram / Facebook / YouTube profile link বসাতে পারবেন।");
+}
+document.querySelectorAll(".cat").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+    render(btn.dataset.cat);
+  });
+});
+render();
+</script>
+</body>
+</html>
